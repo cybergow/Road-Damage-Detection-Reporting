@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # Database
+  mongodb:
+    image: mongo:6.0
+    container_name: roadguard-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - roadguard-network
+    restart: always
+
+  # AI Service (Flask + YOLOv8)
+  ai-service:
+    build: ./ai-service
+    container_name: roadguard-ai
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+    networks:
+      - roadguard-network
+    volumes:
+      - yolov8-models:/app/models
+    restart: always
+
+  # Backend (Node + Express)
+  backend:
+    build: ./backend
+    container_name: roadguard-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/roadguard
+      - JWT_SECRET=roadguard_secret_super_secure_key_12345
+      - JWT_EXPIRE=7d
+      - AI_SERVICE_URL=http://ai-service:5001
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=test@gmail.com
+      - SMTP_PASS=password123
+      - EMAIL_FROM=noreply@roadguard.ai
+      - FRONTEND_URL=http://localhost
+    depends_on:
+      - mongodb
+      - ai-service
+    networks:
+      - roadguard-network
+    restart: always
+
+  # Frontend (React + Vite + Nginx)
+  frontend:
+    build: ./frontend
+    container_name: roadguard-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - roadguard-network
+    restart: always
+
+networks:
+  roadguard-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  yolov8-models:

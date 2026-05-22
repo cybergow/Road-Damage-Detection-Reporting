@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-200 text-white font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-300;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/20;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-lg hover:shadow-primary-500/5;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent;
+  }
+
+  .gradient-btn {
+    @apply bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25;
+  }
+
+  .animated-gradient-bg {
+    background: linear-gradient(-45deg, #0a0e27, #1e3a8a, #0891b2, #0a0e27);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: #0a0e27 !important;
+  border-radius: 1rem;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply glass-card !bg-dark-100/95 text-white !rounded-xl;
+}
+
+.leaflet-popup-tip {
+  @apply !bg-dark-100/95;
+}
+
+.leaflet-popup-content {
+  @apply !text-white !m-3;
+}
+
+.leaflet-control-zoom a {
+  @apply !bg-dark-100/90 !text-white !border-white/10;
+}
+
+.leaflet-control-attribution {
+  @apply !bg-dark-100/80 !text-white/50;
+}
+
+/* User Location Pulsing Dot */
+.user-location-pulse {
+  width: 14px;
+  height: 14px;
+  background: #3b82f6;
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+  position: relative;
+}
+
+.user-location-pulse::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.4);
+  animation: userPulse 2s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes userPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
